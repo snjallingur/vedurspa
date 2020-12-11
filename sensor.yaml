@@ -1,0 +1,40 @@
+# 
+# Veðurspá MQTT sensor
+# Reykjavik
+- platform: mqtt
+  name: "vedurspa_reykjavik_6h"
+  state_topic: "homeassistant/vedurspa/reykjavik/6h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/reykjavik/6h"
+  json_attributes_template: "{{ value_json | tojson }}"
+- platform: mqtt
+  name: "vedurspa_reykjavik_12h"
+  state_topic: "homeassistant/vedurspa/reykjavik/12h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/reykjavik/12h"
+  json_attributes_template: "{{ value_json | tojson }}"
+# Hvanneyri
+- platform: mqtt
+  name: "vedurspa_hvanneyri_6h"
+  state_topic: "homeassistant/vedurspa/hvanneyri/6h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/hvanneyri/6h"
+  json_attributes_template: "{{ value_json | tojson }}"
+- platform: mqtt
+  name: "vedurspa_hvanneyri_12h"
+  state_topic: "homeassistant/vedurspa/hvanneyri/12h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/hvanneyri/12h"
+  json_attributes_template: "{{ value_json | tojson }}"
