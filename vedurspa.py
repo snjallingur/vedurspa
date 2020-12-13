@@ -1,5 +1,5 @@
 # install requirements if needed 
-# pip3.8 install BeautifulSoup4 lxml
+# pip3.8 install BeautifulSoup4 lxml bs4
 import requests
 from bs4 import BeautifulSoup
 import time
