@@ -38,3 +38,22 @@
   value_template: "{{ value_json['temperature'] }}"
   json_attributes_topic: "homeassistant/vedurspa/hvanneyri/12h"
   json_attributes_template: "{{ value_json | tojson }}"
+# Egilsstaðir
+- platform: mqtt
+  name: "vedurspa_egilsstadir_6h"
+  state_topic: "homeassistant/vedurspa/egilsstadir/6h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/egilsstadir/6h"
+  json_attributes_template: "{{ value_json | tojson }}"
+- platform: mqtt
+  name: "vedurspa_egilsstadir_12h"
+  state_topic: "homeassistant/vedurspa/egilsstadir/12h"
+  icon: mdi:weather-partly-cloudy
+  device_class: temperature
+  unit_of_measurement: '°C'
+  value_template: "{{ value_json['temperature'] }}"
+  json_attributes_topic: "homeassistant/vedurspa/egilsstadir/12h"
+  json_attributes_template: "{{ value_json | tojson }}"
