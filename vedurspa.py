@@ -17,7 +17,7 @@ client.connect(broker)
 # Frekari upplýsingar um skiluð svör:
 # https://www.vedur.is/skjol/vefur/XML-thjonusta-090813.pdf
 # 
-url = 'https://xmlweather.vedur.is/?op_w=xml&type=forec&lang=is&view=xml&ids=1;1779'
+url = 'https://xmlweather.vedur.is/?op_w=xml&type=forec&lang=is&view=xml&ids=1;1779;571'
 document = requests.get(url)
 vedurspa = BeautifulSoup(document.content,"lxml-xml")
       
@@ -27,6 +27,9 @@ reykjavik_6h = {}
 reykjavik_12h = {}
 hvanneyri_6h = {}
 hvanneyri_12h = {}
+egilsstadir_6h = {}
+egilsstadir_12h = {}
+
 
 for station in content:
     # print(content['station'])
@@ -94,4 +97,36 @@ for station in content:
                     #print("Temperature Forecast for " + forecast_time + " is " + forecast_temperature + " degrees")
                     hvanneyri_12h = json.dumps(hvanneyri_12h, separators=(',', ':'))
                     #print(reykjavik_6h)
-                    client.publish("homeassistant/vedurspa/hvanneyri/12h",str(hvanneyri_12h))      
+                    client.publish("homeassistant/vedurspa/hvanneyri/12h",str(hvanneyri_12h))  
+
+      if name == 'Egilsstaðaflugvöllur':
+        for forecast_element in forecasts:
+            forecast_time = forecast_element.find("ftime").string
+            time_now = datetime.now()
+            forecast_timespamp = datetime.strptime(forecast_time, "%Y-%m-%d %H:%M:%S")
+            timedelta_seconds = (forecast_timespamp - time_now).seconds
+            timedelta_hours = round(timedelta_seconds/3600,0)
+            timedelta_days = (forecast_timespamp - time_now).days
+            if timedelta_days == 1:
+                #print("Timedelta in hours: " + str(timedelta_hours))
+                #print(forecast_time)
+                if str(timedelta_hours) in ['6.0']:
+                    forecast_temperature = forecast_element.find("T").string
+                    egilsstadir_6h['temperature'] = forecast_element.find("T").string
+                    egilsstadir_6h['wind_speed'] = forecast_element.find("F").string
+                    egilsstadir_6h['wind_direction'] = forecast_element.find("D").string
+                    egilsstadir_6h['forecast'] = forecast_element.find("W").string
+                    #print("Temperature Forecast for " + forecast_time + " is " + forecast_temperature + " degrees")
+                    egilsstadir_6h = json.dumps(egilsstadir_6h, separators=(',', ':'))
+                    #print(reykjavik_6h)
+                    client.publish("homeassistant/vedurspa/egilsstadir/6h",str(hvanneyri_6h))
+                if str(timedelta_hours) in ['12.0']:
+                    forecast_temperature = forecast_element.find("T").string
+                    egilsstadir_12h['temperature'] = forecast_element.find("T").string
+                    egilsstadir_12h['wind_speed'] = forecast_element.find("F").string
+                    egilsstadir_12h['wind_direction'] = forecast_element.find("D").string
+                    egilsstadir_12h['forecast'] = forecast_element.find("W").string
+                    #print("Temperature Forecast for " + forecast_time + " is " + forecast_temperature + " degrees")
+                    egilsstadir_12h = json.dumps(egilsstadir_12h, separators=(',', ':'))
+                    #print(reykjavik_6h)
+                    client.publish("homeassistant/vedurspa/hvanneyri/12h",str(egilsstadir_12h)) 
