@@ -1,3 +1,10 @@
+# need to install
+# pip install paho-mqtt requests lxml html5lib bs4
+import sys
+import json
+import requests
+import time
+import paho.mqtt.client as paho
 import logging
 # initialize the log settings
 #logging.basicConfig(filename = '/usr/share/hassio/homeassistant/snjallingur_scripts/pythonscripts.log', level = logging.DEBUG)
