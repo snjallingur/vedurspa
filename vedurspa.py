@@ -28,7 +28,7 @@ broker="localhost"
 # create client and connect to broker
 try:
     client= paho.Client("client-vedurspa")
-    client.username_pw_set(username="homeassistant",password="kjbsldvnæamv")
+    client.username_pw_set(username="mqttusername",password="mqttuserpassword")
     client.connect(broker)
     client.loop_start()  #Start loop 
     time.sleep(4) # Wait for connection setup to complete
