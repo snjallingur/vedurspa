@@ -1,4 +1,6 @@
-# 
+# THIS VERSION IS OBSOLETE AND WILL NOT WORK WITH HOME ASSISTANT AFTER 2022.12
+# USE mqtt.yaml INSTEAD
+#
 # Veðurspá MQTT sensor
 # Reykjavik
 - platform: mqtt
