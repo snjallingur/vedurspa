@@ -1,20 +1,71 @@
-# Vedurspá
-MQTT sensor for the icelandic weather forecast.
-The sensor pulls information from xmlweather.vedur.is. More information about this API can be found here:
-https://www.vedur.is/skjol/vefur/XML-thjonusta-090813.pdf
+# Icelandic weather forecast
 
-Available stations can be found here:
-https://www.vedur.is/vedur/spar/stadaspar/
-By clciking on one of sysmbols you can gather the weather station ID. Similar to: https://www.vedur.is/vedur/spar/stadaspar/#station=422 -> Akureyri
+This is a complete rewrite of the previous approach to pull in icelandic weather forecast information from [vedur.is](https://vedur.is). It is now using the Pyscipt add-on of Home Assistant. The python code previously used stays mainly the same with some exceptions to get around the limitations of using the python request library. The sensor(s) are now automatically created with the python script so no need to specify them particularly in the `sensors.yaml` file.
 
-You will need:
-1. A python script that reads the xml file and extract the data. In my example I extract the data for the next 6h and 12h weather forecast and push that information to a MQTT topic ("vedurspa.py").
-2. Run the Python script from a Shell command ("shell_command.yaml"). Make sure you have all dependencies installed and make sure the script is executable.
-3. A defined MQTT sensor ("mqtt.yaml")
-4. An automation ("automation.yaml") that pulls the information on a regular basis.
+## Installing Pyscript
 
-The instructions above can be used for the Home Assistant Core version. If you are running the Home Assistant Supervisor version you will need to run the python script with a cron job (at least I haven´t found a way to achieve that with a shell script/command). What works for me is:
+Before you can use this code you will need to install the pyscript integration from HACS 
 
-*/10 * * * * homeassistant bash --login -c "/home/homeassistamt/.pyenv/shims/python3 /usr/share/hassio/homeassistant/scripts/vegagerdin.py" >> /home/homeassistant/cronjob.log 2>&1
+![Installing Pyscript from HACS](images/pyscript_install_1.jpg)
 
-When you are all done you can use this sensor to adjust e.g. the floor heat (as I do). More on that later... 
+After a restart of HA you need to add Pyscript to your list of integrations.
+
+![Installing Pyscript integration](images/pyscript_install_2.jpg)
+
+In the upcoming window check *Allow All Imports?*
+
+Now start by coding and placing your python scripts in the `pyscript` folder
+
+![alt text](images/pyscript_install_3.jpg)
+
+## What will the installed code do
+
+The python code provided is quering the vedur.is API. More specifically:
+
+> https://xmlweather.vedur.is/?op_w=xml&type=forec&lang=is&view=xml&ids=1
+
+whereas the queried weather station is defined by the `ids` parameter
+
+> ids=1
+
+A detailed list of available weather stations can be found [here](https://www.vedur.is/vedur/stodvar/).
+To get the weather station id click on the weather station you are interested in and search for the "stöðvarnúmer"
+
+![Weather station information](images/weather_station_1.jpg)
+
+> Not all weather stations do support the weather forecast functionality!
+
+The response of the API is a long list of forecasts on an hourly basis. Eg.
+
+    <forecast>
+        <ftime>2024-03-15 01:00:00</ftime>
+        <F>6</F>
+        <D>A</D>
+        <T>0</T>
+        <W>Alskýjað</W>
+    </forecast>
+
+The python script is grabbing as an example the forecast for the next 6 hours and the next 12 hours.
+You can amend the script to add more or less sensors. I recommend having one file for each weather station that you want to pull information from various stations.
+
+The code will register and update the sensor(s) on a regular basis. How often that is being pulled can be determined with a time trigger
+
+    @time_trigger("cron(*/30 * * * *)")
+
+But the code can also be called as the service defined with
+
+    @service
+    def vedurspa_rvk():
+        update_vedurspa_rvk()
+
+
+## How to leverage the information in HA
+
+After you have placed the script in the folder you should be able to see the sensors defined.
+The sensor is populated with the forecasted temperature. Additional attributes have been provided with the sensor
+
+![Sensors populated from the python script](images/HA_sensors.jpg)
+
+### Pyscript add-on
+
+More information and documentation on the Pyscript add-on can be found [here](https://hacs-pyscript.readthedocs.io/en/latest/reference.html)
