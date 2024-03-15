@@ -29,7 +29,7 @@ whereas the queried weather station is defined by the `ids` parameter
 > ids=1
 
 A detailed list of available weather stations can be found [here](https://www.vedur.is/vedur/stodvar/).
-To get the weather station id click on the weather station you are interested in and search for the "stöðvarnúmer"
+To get the weather station id click on the weather station you are interested in and search for the "Stöðvanúmer"
 
 ![Weather station information](images/weather_station_1.jpg)
 
